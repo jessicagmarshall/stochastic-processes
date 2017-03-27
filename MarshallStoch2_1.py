@@ -53,7 +53,7 @@ SNR = np.array([1, .5, .05])
 MAP_temp = np.zeros(num_trials)
 num_thresh = 100
 detect = np.zeros(num_trials)
-new_thresh = .025           #this value was derived in part 1c
+new_thresh = 2.5           #this value was derived in part 1c
 
 PF = np.zeros((SNR.size, num_thresh))
 PD = np.zeros((SNR.size, num_thresh))
@@ -106,16 +106,18 @@ P1 = np.linspace(0, 1, 101)
 expected_cost = np.zeros(P1.size)
 PM = PM[SNR, point[SNR].astype(int)]
 PF = PF[SNR, point[SNR].astype(int)]
+minimax = np.ones(P1.size)
+
 
 for i in range(0, P1.size):
     expected_cost[i] = ((1-P1[i])*10*PF) + (P1[i]* PM)
     
 plt.figure
 lw = 2
-plt.plot(P1, expected_cost, color='darkred', lw=lw, alpha = .75)
+plt.plot(P1, expected_cost, color='darkred', lw=lw, alpha = .75, label='expected cost')
+plt.plot(P1, minimax, color='darkgreen', lw=lw, alpha = .75, label='minimax')
 plt.xlabel('P1')
 plt.ylabel('Risk')
-plt.title('Expected Cost')
+plt.title('Risk Function')
+plt.legend(loc="upper right")
 plt.show()
-
-############################################################
