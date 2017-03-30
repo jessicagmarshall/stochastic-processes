@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import scipy
+from sklearn.metrics import confusion_matrix
 
 #Part 3
 #Introduction to pattern classification and machine learning
@@ -59,12 +60,16 @@ for i in range(0, X_test_mat.shape[0]):
     
     test_results[i] = name
 
-y_test_mat[y_test_mat == 'Iris-virginica'] = 0
-y_test_mat[y_test_mat == 'Iris-versicolor'] = 1
-y_test_mat[y_test_mat == 'Iris-setosa'] = 2
+y_test_CM = np.zeros(test_results.shape)
 
-error = np.equal(y_test_mat, test_results)
+y_test_CM[y_test_mat == 'Iris-virginica'] = 0
+y_test_CM[y_test_mat == 'Iris-versicolor'] = 1
+y_test_CM[y_test_mat == 'Iris-setosa'] = 2
+
+error = np.equal(y_test_CM, test_results)
 percent_error = 100 * (1 - (np.sum(error)/y_test.shape[0]))
 print("percent error = ", percent_error, '%')
 
-
+cm = confusion_matrix(y_test_CM, test_results.astype(int))
+np.set_printoptions(precision=2)
+print(cm)
