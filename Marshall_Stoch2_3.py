@@ -36,11 +36,35 @@ X_test_mat = X_test.as_matrix()
 #y_train_mat = y_train.as_matrix()
 y_test_mat = y_test.as_matrix()
 
-test = np.zeros(y_test_mat.shape[0])
+test_results = np.zeros(X_test_mat.shape[0])
 
-for i in range(0, y_test.shape[0]):
+for i in range(0, X_test_mat.shape[0]):
+    test_element = X_test_mat[i]        #sample being tested
     
+    pdf_virginica = scipy.stats.multivariate_normal.pdf(test_element, mean_virginica, cov_virginica)
+    pdf_versicolor = scipy.stats.multivariate_normal.pdf(test_element, mean_versicolor, cov_versicolor)
+    pdf_setosa = scipy.stats.multivariate_normal.pdf(test_element, mean_setosa, cov_setosa)
+    
+    max = pdf_virginica
+    #name = 'Iris-virginica'
+    name = 0
+    if pdf_versicolor > max:
+        max = pdf_versicolor
+        #name = 'Iris-versicolor'
+        name = 1
+    if pdf_setosa > max:
+        max = pdf_setosa
+        #name = 'Iris-setosa'
+        name = 2
+    
+    test_results[i] = name
 
-#pdf_virginica = scipy.stats.multivariate_normal.pdf(test_element, mean_virginica, cov_virginica)
-#pdf_versicolor = scipy.stats.multivariate_normal.pdf(test_element, mean_versicolor, cov_versicolor)
-#pdf_setosa = scipy.stats.multivariate_normal.pdf(test_element, mean_setosa, cov_setosa)
+y_test_mat[y_test_mat == 'Iris-virginica'] = 0
+y_test_mat[y_test_mat == 'Iris-versicolor'] = 1
+y_test_mat[y_test_mat == 'Iris-setosa'] = 2
+
+error = np.equal(y_test_mat, test_results)
+percent_error = 100 * (1 - (np.sum(error)/y_test.shape[0]))
+print("percent error = ", percent_error, '%')
+
+
